@@ -16,11 +16,13 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -68,7 +70,7 @@ public class JavaApplication2 {
     }
 
     // retreive review informations: name, date, review, rating
-    public static ArrayList<String> retreiveReviewsInformation(JSONArray jsonArray) {
+    public static ArrayList<String> retreiveReviewsInformation(JSONArray jsonArray, URL urlGoodreadsReviews, String reviewURL) throws JSONException {
 
         String reviewAuthor;
         String reviewDate;
@@ -77,24 +79,6 @@ public class JavaApplication2 {
         String reviewRating;
 
         ArrayList<String> reviewsInformation = new ArrayList<>();
-        ArrayList<String> listOfReviewsURLs = new ArrayList<>();
-
-        try {
-            JSONArray reviews = jsonArray.getJSONObject(1).getJSONArray("reviews");
-            //  for (int i = 0; i<reviews.length(); i++) {
-//                    JSONObject jsonObject = reviews.getJSONObject(i);
-//                    listOfReviewsURLs.add(jsonObject.getString("url"));
-        } catch (JSONException e) {
-            JSONObject reviews = jsonArray.getJSONObject(1).getJSONObject("reviews");
-            listOfReviewsURLs.add(reviews.getString("url"));
-        }
-
-        URL urlGoodreadsReviews = null;
-        try {
-            urlGoodreadsReviews = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Freview%2Fshow%2F947835070&format=json&vocab_expansion=false&vocab_cache=true");
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(JavaApplication2.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         String jsonStringReview = prepareStringForJSONTransformation(urlGoodreadsReviews);
 
@@ -120,10 +104,13 @@ public class JavaApplication2 {
             reviewAuthor += splitS[i].substring(0, 1).toUpperCase() + splitS[i].substring(1) + " ";
         }
 
-        Document reviewPageGoodreads = retreiveDocumentPage("https://www.goodreads.com/review/show/437438644");
-        Elements reviewElement = reviewPageGoodreads.getElementsByClass("staticStars");
-
-        reviewRating = reviewElement.get(0).text();
+        Document reviewPageGoodreads = retreiveDocumentPage(reviewURL);
+        try {
+            Elements reviewElement = reviewPageGoodreads.getElementsByClass("staticStars");
+            reviewRating = reviewElement.get(0).text();
+        } catch (Exception e) {
+            reviewRating = "No rating.";
+        }
 
         reviewsInformation.add(reviewAuthor);
         reviewsInformation.add(reviewDate);
@@ -144,11 +131,12 @@ public class JavaApplication2 {
         }
     }
 
-    public static void prettyPrintJsonObject(JsonObject jsonObject) {
+    public static void prettyPrintJsonObject(JSONObject jsonObject) {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject));
+            Object json = mapper.readValue(jsonObject.toString(), Object.class);
+            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
         } catch (IOException ex) {
             Logger.getLogger(JavaApplication2.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -166,7 +154,7 @@ public class JavaApplication2 {
     }
 
     // prepareJSONArray for elements md:item and @list
-    public static JSONArray prepareJSONArray(String jsonString) {
+    public static JSONArray prepareJSONArray(String jsonString) throws JSONException {
 
         JSONObject jsonObject = new JSONObject(jsonString);
         JSONObject mdItem = jsonObject.getJSONObject("md:item");
@@ -193,10 +181,10 @@ public class JavaApplication2 {
 
             for (String s : goodreadsList.subList(0, 1)) {
 
-//                URL goodreadsBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F"
-//                        + s
-//                        + "&format=json&vocab_expansion=false&vocab_cache=true");
-                URL goodreadsBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F31173.Villette%3Fref%3Dru_lihp_up_rs_0_mclk%26uid%3D1848568670&format=json&vocab_expansion=false&vocab_cache=true");
+                URL goodreadsBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F"
+                        + s
+                        + "&format=json&vocab_expansion=false&vocab_cache=true");
+                //  URL goodreadsBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F31173.Villette%3Fref%3Dru_lihp_up_rs_0_mclk%26uid%3D1848568670&format=json&vocab_expansion=false&vocab_cache=true");
                 String jsonStringGoodreads = prepareStringForJSONTransformation(goodreadsBook);
 
                 // URL ebooksBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=http%3A%2F%2Fit-ebooks.info%2Fbook%2F2537%2F&format=json&vocab_expansion=false&vocab_cache=true");
@@ -210,13 +198,48 @@ public class JavaApplication2 {
                 String reviewDate = "";
                 String reviewBody = "";
                 String reviewRating = "";
-
+                JSONArray reviewArray = new JSONArray();
                 if (jsonArrayGoodreads.getJSONObject(1).has("reviews")) {
-                    ArrayList<String> reviewInformations = retreiveReviewsInformation(jsonArrayGoodreads);
-                    reviewAuthor = reviewInformations.get(0);
-                    reviewDate = reviewInformations.get(1);
-                    reviewBody = reviewInformations.get(2);
-                    reviewRating = reviewInformations.get(3);
+
+                    ArrayList<String> listOfReviewsURLs = new ArrayList<>();
+
+                    try {
+                        JSONArray reviews = jsonArrayGoodreads.getJSONObject(1).getJSONArray("reviews");
+                        for (int i = 0; i < reviews.length(); i++) {
+                            JSONObject jsonObject = reviews.getJSONObject(i);
+                            listOfReviewsURLs.add(jsonObject.getString("url"));
+                        }
+                    } catch (JSONException e) {
+                        JSONObject reviews = jsonArrayGoodreads.getJSONObject(1).getJSONObject("reviews");
+                        listOfReviewsURLs.add(reviews.getString("url"));
+                    }
+
+                    for (String reviewURL : listOfReviewsURLs) {
+
+                        URL urlGoodreadsReviews = null;
+                        try {
+                            urlGoodreadsReviews = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri="
+                                    + reviewURL
+                                    + "&format=json&vocab_expansion=false&vocab_cache=true");
+                        } catch (MalformedURLException ex) {
+                            Logger.getLogger(JavaApplication2.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        ArrayList<String> reviewInformations = retreiveReviewsInformation(jsonArrayGoodreads, urlGoodreadsReviews, reviewURL);
+                        reviewAuthor = reviewInformations.get(0);
+                        reviewDate = reviewInformations.get(1);
+                        reviewBody = reviewInformations.get(2);
+                        reviewRating = reviewInformations.get(3);
+                        JSONObject reviewObject = new JSONObject();
+
+                        reviewObject.put("@type", "Review");
+                        reviewObject.put("author", reviewAuthor);
+                        reviewObject.put("datePublished", reviewDate);
+                        reviewObject.put("reviewBody", reviewBody);
+                        reviewObject.put("reviewRating", reviewRating);
+
+                        reviewArray.put(reviewObject);
+                    }
                 }
 
                 String awards;
@@ -231,6 +254,7 @@ public class JavaApplication2 {
                 String edition;
                 String author = "";
                 String image;
+                String descriptionGoodreads;
 
                 ratingValue = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingValue");
                 reviewCount = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingCount");
@@ -243,14 +267,12 @@ public class JavaApplication2 {
                 edition = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookEdition");
                 image = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "image");
 
-                try {
-                    author = jsonArrayGoodreads.getJSONObject(1).getJSONObject("author").getString("name");
-                } catch (JSONException e) {
-                    JSONArray authorArray = jsonArrayGoodreads.getJSONObject(1).getJSONObject("author").getJSONArray("name");
-                 //   prettyPrintJsonArray(authorArray);
-                    author = authorArray.toString();
-                    System.out.println(author);
-                }
+                author = getAuthorNameOrNames(jsonArrayGoodreads);
+
+                Document descriptionPage = retreiveDocumentPage("https://www.goodreads.com/book/show/7094569-feed");
+                Element descriptionElement = descriptionPage.getElementById("description");
+                descriptionGoodreads = descriptionElement.text();
+                descriptionGoodreads = descriptionGoodreads.substring(0, descriptionGoodreads.length() - 6);
 
                 try {
                     awards = jsonArrayGoodreads.getJSONObject(1).getString("awards");
@@ -265,42 +287,63 @@ public class JavaApplication2 {
                 for (Element element : publisherElements) {
                     publisher = element.text();
                 }
-                String description = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "description");
+                //      String descriptionITEbooks = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "description");
                 String datePublished = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "datePublished");
 
-                JsonObject data = Json.createObjectBuilder()
-                        .add("@context", "http://schema.org")
-                        .add("@type", "WebPage")
-                        .add("aggregateRating", Json.createObjectBuilder()
-                                .add("@type", type)
-                                .add("ratingValue", ratingValue)
-                                .add("reviewCount", reviewCount))
-                        .add("author", author)
-                        .add("bookFormat", bookFormat)
-                        //   .add("datePublished", datePublished)
-                        .add("image", image)
-                        //  .add("description", description)
-                        .add("inLanguage", inLanguage)
-                        .add("isbn", isbn)
-                        .add("name", bookName)
-                        .add("numberOfPages", numberOfPages)
-                        .add("edition", edition)
-                        .add("awards", awards)
-                        //   .add("publisher", publisher)
-                        .add("reviews", Json.createObjectBuilder()
-                                .add("@type", "Review")
-                                .add("author", reviewAuthor)
-                                .add("datePublished", reviewDate)
-                                .add("reviewBody", reviewBody)
-                                .add("reviewRating", reviewRating))
-                        .build();
+                String subtitleITEbooks;
+                Document subtitle = retreiveDocumentPage("http://it-ebooks.info/book/3169/");
+                try {
+                    Elements elementsSub = subtitle.getElementsByTag("h3");
+                    subtitleITEbooks = elementsSub.text();
+                } catch (Exception e) {
+                    subtitleITEbooks = "";
+                }
+                JSONObject ratingObject = new JSONObject();
+                ratingObject.put("@type", type);
+                ratingObject.put("ratingValue", ratingValue);
+                ratingObject.put("reviewCount", reviewCount);
+                JSONObject bookForStoring = new JSONObject();
+                bookForStoring.put("@context", "http://schema.org");
+                bookForStoring.put("@type", "WebPage");
+                bookForStoring.put("aggregateRating", ratingObject);
+                bookForStoring.put("author", author);
+                bookForStoring.put("bookFormat", bookFormat);
+                //     bookForStoring.put("datePublished", datePublished)
+                bookForStoring.put("image", image);
+                bookForStoring.put("description", descriptionGoodreads);
+                bookForStoring.put("inLanguage", inLanguage);
+                bookForStoring.put("isbn", isbn);
+                bookForStoring.put("name", bookName);
+                bookForStoring.put("numberOfPages", numberOfPages);
+                bookForStoring.put("edition", edition);
+                bookForStoring.put("awards", awards);
+                //     bookForStoring.put("publisher", publisher)
+                bookForStoring.put("reviews", reviewArray);
+                     
 
-               // prettyPrintJsonObject(data);
-             //    saveBook(data, table);
+                   saveBook(bookForStoring, table);
                 //  prettyPrintJSONObjectFromDB(table);
             }
         } catch (UnknownHostException | MongoException e) {
         }
+    }
+
+    public static String getAuthorNameOrNames(JSONArray jsonArray) throws JSONException {
+
+        String author;
+        try {
+            author = jsonArray.getJSONObject(1).getJSONObject("author").getString("name");
+        } catch (JSONException e) {
+            JSONArray authorArray = jsonArray.getJSONObject(1).getJSONObject("author").getJSONArray("name");
+            ArrayList<String> authorArrayList = new ArrayList<>();
+            for (int i = 0; i < authorArray.length(); i++) {
+                Object jsonObject = authorArray.get(i);
+                authorArrayList.add(jsonObject.toString());
+            }
+            author = authorArrayList.toString();
+            author = author.substring(1, author.length() - 1);
+        }
+        return author;
     }
 
     public static String getSpecificAttributeFromJSON(JSONArray jsonArray, int objectPosition, String objectName) {
@@ -326,7 +369,7 @@ public class JavaApplication2 {
         System.out.println(json);
     }
 
-    public static void saveBook(JsonObject data, DBCollection collection) {
+    public static void saveBook(JSONObject data, DBCollection collection) {
 
         DBObject dbo = (DBObject) JSON.parse(data.toString());
         collection.insert(dbo);
