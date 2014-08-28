@@ -6,6 +6,36 @@
 
 package javaapplication2;
 
+import com.mongodb.BasicDBObject;
+
+                //      String descriptionITEbooks = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "description");
+
+ //                                for (int i = 0; i < reviews.length(); i++) {
+//                            JSONObject jsonObject = reviews.getJSONObject(i);
+//                            listOfReviewsURLs.add(jsonObject.getString("url"));
+//                        }
+
+ //           BasicDBObject document = new BasicDBObject();
+
+//                                for (int i = 0; i < reviews.length(); i++) {
+//                            JSONObject jsonObject = reviews.getJSONObject(i);
+//                            listOfReviewsURLs.add(jsonObject.getString("url"));
+//                        }
+
+//                                  .add("reviews", Json.createObjectBuilder()
+//                                .add("@type", "Review")
+//                                .add("author", reviewAuthor)
+//                                .add("datePublished", reviewDate)
+//                                .add("reviewBody", reviewBody)
+//                                .add("reviewRating", reviewRating))
+//                        .build();
+
+
+//  .add("@type", type)
+//                                .add("ratingValue", ratingValue)
+//                                .add("reviewCount", reviewCount))
+
+
 // for (Element link : ebooksElements) {
 //            String linkHref = link.attr("href");
 //            ebooksList.add(linkHref);
