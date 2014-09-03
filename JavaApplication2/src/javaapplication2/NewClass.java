@@ -182,9 +182,19 @@ public abstract class NewClass {
             + "    }\n"
             + "}";
 
+      //           
+//           
+//            for (int j = 0; j < eBooksList.size(); j += 2) {
+//                System.out.println(eBooksList.get(j));
+//            }
       
-      
-     
+ //                    String publisherLink = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "publisher");
+//                Document publisherDocument = retreiveDocumentPage(publisherLink);
+//                Elements publisherElements = publisherDocument.getElementsByAttributeValue("style", "margin-bottom:20px;");
+//                publisher = "";
+//                for (Element element : publisherElements) {
+//                    publisher = element.text();
+//                }
 
  //   { "_id" : { "$oid" : "53ef7999e4749e5ca91c6d87"} , 
 //"@context" : "http://schema.org" ,
@@ -292,3 +302,54 @@ public abstract class NewClass {
 
      //http://www.ebooks.com/Adobe-Photoshop-CS6-Classroom-Book/dp/0321827333
                 // System.out.println(y);
+
+//          image = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "image");
+//        author = getAuthorNameOrNames(jsonArrayGoodreads);
+//        bookName = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "name");
+//        isbn = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "isbn");
+
+//                  System.out.println(readOnlineLink);
+//                System.out.println(publisher);
+//                System.out.println(datePublished);
+//                System.out.println(subtitleITEbooks);
+//                System.out.println(isbn);
+//                System.out.println(bookName);
+//                System.out.println(image);
+
+//        new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=http%3A%2F%2Fit-ebooks.info"
+//                        + eBookURL
+//                        + "&format=json&vocab_expansion=false&vocab_cache=true");
+
+//   updateQuery.append("$set",
+//                new BasicDBObject().append("numberOfPages", updateList.get(1)));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("aggregateRating.ratingValue", updateList.get(2)));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("aggregateRating.reviewCount", updateList.get(3)));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("aggregateRating.@type", updateList.get(4)));
+//        updateQuery.append("bookFormat", updateList.get(5));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("bookFormat", updateList.get(5)));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("edition", updateList.get(6)));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("awards", updateList.get(7)));
+//        updateQuery.append("$set",
+//                new BasicDBObject().append("description", updateList.get(8)));
+
+
+//  BasicDBList parsedReviewArray = new BasicDBList();
+//        for (int i = 0; i<reviewArray.length(); i++){
+//           JSONObject reviewObject = reviewArray.getJSONObject(i);
+//           parsedReviewArray.add(i, (DBObject) JSON.parse(reviewObject.toString()));
+//        }
+//        BasicDBObject updateObject = new BasicDBObject("$set", updateQuery);
+//        BasicDBObject update = new BasicDBObject();
+//        update.append("lista", parsedReviewArray);
+//                BasicDBObject update1 = new BasicDBObject("$set", update);
+//     //   DBObject reviewObject = new BasicDBObject("$pushAll", new BasicDBObject("reviews", reviewArray));
+//        bookTable.update(searchQuery, updateObject);
+//        bookTable.update(searchQuery, update1);
+//    //    bookTable.update(searchQuery, reviewObject);
+//      //  bookTable.update(searchQuery, BasicDBObjectBuilder.start().push("$pushAll").add("indexes", reviewArray).pop().get());

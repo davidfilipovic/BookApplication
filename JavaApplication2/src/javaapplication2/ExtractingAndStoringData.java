@@ -19,6 +19,8 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -40,22 +42,24 @@ import org.jsoup.select.Elements;
  */
 public class ExtractingAndStoringData {
 
-    String awards;
-    String ratingValue;
-    String reviewCount;
-    String type;
-    String isbn;
-    String bookName;
-    String numberOfPages;
-    String inLanguage;
-    String bookFormat;
-    String edition;
+    String awards = "";
+    String ratingValue = "";
+    String ratingCount = "";
+    String type = "";
+    String isbn = "";
+    String bookName = "";
+    String numberOfPages = "";
+    String inLanguage = "";
+    String bookFormatType = "";
+    String bookEdition = "";
     String author = "";
-    String image;
-    String description;
-    String datePublished;
-    String publisher;
-    String bookSubTitle;
+    String image = "";
+    String description = "";
+    String datePublished = "";
+    String publisher = "";
+    String bookSubTitle = "";
+    String readOnlineLink = "";
+    JSONArray reviewArray;
 
     public static Document retreiveDocumentPage(String url) {
 
@@ -240,111 +244,142 @@ public class ExtractingAndStoringData {
         return jsonArray;
     }
 
-  
+    public URL returnPageInJSON(String site, String bookURL) {
 
-    public void goodreadsBooks() {
+        URL bookInHTML = null;
+        try {
+            bookInHTML = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri="
+                    + site
+                    + bookURL
+                    + "&format=json&vocab_expansion=false&vocab_cache=true");
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ExtractingAndStoringData.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bookInHTML;
+    }
 
-        Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/it?page=2");
+    public void itEBooks() throws MalformedURLException {
+
+        String itEBooksSite = "http://it-ebooks.info";
+        for (int i = 0; i < 1; i++) {
+
+            Document eBooks = retreiveDocumentPage("http://it-ebooks.info/tag/programming/page/" + i + "/");
+            Elements ebooksElements = eBooks.getElementsByAttribute("title");
+            List<String> eBooksList = retreiveLinksFromPage(ebooksElements);
+            eBooksList = eBooksList.subList(4, 26);
+
+            ArrayList<String> finalEBooksList = new ArrayList<>();
+            for (int j = 0; j < eBooksList.size(); j += 2) {
+                finalEBooksList.add(eBooksList.get(j));
+            }
+
+            for (String eBookURL : finalEBooksList) {
+
+                URL ebooksBook = returnPageInJSON(itEBooksSite, eBookURL);
+                String jsonStringEBooks = prepareStringForJSONTransformation(ebooksBook);
+                JSONArray jsonArrayITEbooks = prepareJSONArray(jsonStringEBooks);
+
+                bookName = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "name");
+                datePublished = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "datePublished");
+                image = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "image");
+                author = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "author");
+                description = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "description");
+                inLanguage = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "inLanguage");
+
+                Document bookDocument = retreiveDocumentPage(itEBooksSite + eBookURL);
+                try {
+                    Elements elementsSub = bookDocument.getElementsByTag("h3");
+                    bookSubTitle = elementsSub.text();
+                } catch (Exception e) {
+                    bookSubTitle = "";
+                }
+
+                Elements publisherElements = bookDocument.getElementsByAttributeValue("itemprop", "publisher");
+
+                publisher = publisherElements.text();
+                isbn = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "isbn");
+                readOnlineLink = "http://it-ebooks.info/read/" + eBookURL.substring(6);
+
+               // createAndStoreBook();
+            }
+        }
+       //  Database.getDatabaseObject().printNames();
+      //  Database.getDatabaseObject().searchBook("Python Network Programming Cookbook");
+       
+    }
+
+    public void goodreadsBooks() throws MalformedURLException {
+
+        String goodreadsSite = "https://www.goodreads.com";
+
+        //for (int i = 0; i < 1; i++) {
+        Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/it?page=1"); //+ i);
         Elements goodreadsElements = goodreads.getElementsByClass("bookTitle");
-
         ArrayList<String> goodreadsList = retreiveLinksFromPage(goodreadsElements);
 
         for (String bookURL : goodreadsList.subList(0, 1)) {
 
-            URL goodreadsBook = null;
-            try {
-                goodreadsBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com"
-                        + bookURL
-                        + "&format=json&vocab_expansion=false&vocab_cache=true");
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(ExtractingAndStoringData.class.getName()).log(Level.SEVERE, null, ex);
+            URL goodreadsBook
+                    = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F21805068-python-network-programming-cookbook%3Ffrom_search%3Dtrue&format=json&vocab_expansion=false&vocab_cache=true");//returnPageInJSON(goodreadsSite, bookURL);
+            String jsonStringGoodreads = prepareStringForJSONTransformation(goodreadsBook);
+            JSONArray jsonArrayGoodreads = prepareJSONArray(jsonStringGoodreads);
+
+            reviewArray = new JSONArray();
+            if (jsonArrayGoodreads.getJSONObject(1).has("reviews")) {
+                reviewArray = prepareReviewArray(jsonArrayGoodreads);
             }
 
-            // URL goodreadsBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F1894478.Essential_JavaScript_for_Web_Professionals%3Ffrom_search%3Dtrue&format=json&vocab_expansion=false&vocab_cache=true");
-            String jsonStringGoodreads = prepareStringForJSONTransformation(goodreadsBook);
+            ratingValue = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingValue");
+            ratingCount = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingCount");
+            type = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "@type");
+            numberOfPages = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "numberOfPages");
+            inLanguage = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "inLanguage");
+            bookFormatType = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookFormatType");
+            bookEdition = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookEdition");
 
-            // URL ebooksBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=http%3A%2F%2Fit-ebooks.info%2Fbook%2F2537%2F&format=json&vocab_expansion=false&vocab_cache=true");
-            JSONArray jsonArrayGoodreads = prepareJSONArray(jsonStringGoodreads);
-            JSONArray reviewArray = new JSONArray();
+            Document descriptionPage = retreiveDocumentPage(goodreadsSite + bookURL);
+            Element descriptionElement = descriptionPage.getElementById("description");
+            description = descriptionElement.text();
 
-//                if (jsonArrayGoodreads.getJSONObject(1).has("reviews")) {
-//                    reviewArray = prepareReviewArray(jsonArrayGoodreads);
-//                }
-            createAndStoreBook(jsonArrayGoodreads, bookURL);
+            try {
+                description = description.substring(0, description.length() - 6);
+            } catch (Exception e) {
+            }
+
+            try {
+                awards = jsonArrayGoodreads.getJSONObject(1).getString("awards");
+            } catch (JSONException e) {
+                awards = "Without awards";
+            }
+
+            bookName = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "name");
+            bookName = bookName.substring(7, bookName.length() - 1);
+            if (Database.getDatabaseObject().bookExists(bookName)) {
+                System.out.println("ppp");
+                ArrayList<String> updateAttributeList = new ArrayList<>(
+                        Arrays.asList(inLanguage, numberOfPages, ratingValue, ratingCount, type, bookFormatType, bookEdition, awards, description));
+                Database.getDatabaseObject().updateBook(updateAttributeList, bookName, reviewArray);
+            } else {
+                System.out.println("ooo");
+            }
         }
-    }
-    
-      public static void itEBooks() throws MalformedURLException {
-
-        Document ebooks = retreiveDocumentPage("http://www.ebooks.com/s/ref=lp_3839_pg_2?rh=n%3A283155%2Cn%3A%211000%2Cn%3A5%2Cn%3A3839&page=2&ie=UTF8&qid=1408207294");
-        Elements ebooksElements = ebooks.getElementsByClass("title");
-
-        URL ebooksBook = new URL("http://www.w3.org/2012/pyMicrodata/extract?uri=http%3A%2F%2Fit-ebooks.info%2Fbook%2F3658%2F&format=json&vocab_expansion=false&vocab_cache=true");
-        String jsonStringEBooks = prepareStringForJSONTransformation(ebooksBook);
-
-        JSONArray jsonArrayITEbooks = prepareJSONArray(jsonStringEBooks);
-        //  ArrayList<String> ebooksList = retreiveLinksFromPage(ebooksElements);
-
-        String publisherLink = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "publisher");
-        Document publisherDocument = retreiveDocumentPage(publisherLink);
-        Elements publisherElements = publisherDocument.getElementsByAttributeValue("style", "margin-bottom:20px;");
-        String publisher = "";
-        for (Element element : publisherElements) {
-            publisher = element.text();
-        }
-        String datePublished = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "datePublished");
-
-        String subtitleITEbooks;
-        Document subtitle = retreiveDocumentPage("http://it-ebooks.info/book/3169/");
-        try {
-            Elements elementsSub = subtitle.getElementsByTag("h3");
-            subtitleITEbooks = elementsSub.text();
-        } catch (Exception e) {
-            subtitleITEbooks = "";
-        }
+        //  Database.getDatabaseObject().prettyPrintJSONObjectFromDB();
+        //Database.getDatabaseObject().printNames();
     }
 
-    public void createAndStoreBook(JSONArray jsonArrayGoodreads, String bookURL) {
-
-        ratingValue = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingValue");
-        reviewCount = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingCount");
-        type = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "@type");
-        isbn = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "isbn");
-        bookName = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "name");
-        numberOfPages = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "numberOfPages");
-        inLanguage = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "inLanguage");
-        bookFormat = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookFormatType");
-        edition = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookEdition");
-        image = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "image");
-
-        author = getAuthorNameOrNames(jsonArrayGoodreads);
-
-        Document descriptionPage = retreiveDocumentPage("https://www.goodreads.com" + bookURL);
-        Element descriptionElement = descriptionPage.getElementById("description");
-        description = descriptionElement.text();
-
-        try {
-            description = description.substring(0, description.length() - 6);
-        } catch (Exception e) {
-        }
-
-        try {
-            awards = jsonArrayGoodreads.getJSONObject(1).getString("awards");
-        } catch (JSONException e) {
-            awards = "Without awards";
-        }
+    public void createAndStoreBook() {
 
         JSONObject ratingObject = new JSONObject();
         ratingObject.put("@type", type);
         ratingObject.put("ratingValue", ratingValue);
-        ratingObject.put("reviewCount", reviewCount);
+        ratingObject.put("reviewCount", ratingCount);
 
         JSONObject bookForStoring = new JSONObject();
         bookForStoring.put("@context", "http://schema.org");
         bookForStoring.put("@type", "WebPage");
         bookForStoring.put("aggregateRating", ratingObject);
         bookForStoring.put("author", author);
-        bookForStoring.put("bookFormat", bookFormat);
+        bookForStoring.put("bookFormat", bookFormatType);
         bookForStoring.put("datePublished", datePublished);
         bookForStoring.put("image", image);
         bookForStoring.put("description", description);
@@ -353,13 +388,13 @@ public class ExtractingAndStoringData {
         bookForStoring.put("name", bookName);
         bookForStoring.put("subTitle", bookSubTitle);
         bookForStoring.put("numberOfPages", numberOfPages);
-        bookForStoring.put("edition", edition);
+        bookForStoring.put("edition", bookEdition);
         bookForStoring.put("awards", awards);
         bookForStoring.put("publisher", publisher);
-        //    bookForStoring.put("reviews", reviewArray);
+        bookForStoring.put("readOnlineLink", readOnlineLink);
+        bookForStoring.put("reviews", reviewArray);
 
-        saveBook(bookForStoring);
-
+        Database.getDatabaseObject().saveBook(bookForStoring);
     }
 
     public static String getAuthorNameOrNames(JSONArray jsonArray) throws JSONException {
@@ -391,34 +426,4 @@ public class ExtractingAndStoringData {
         return value;
     }
 
-    public static void prettyPrintJSONObjectFromDB(DBCollection collection) {
-
-        DBCursor cursor = collection.find();
-        DBObject row = null;
-        while (cursor.hasNext()) {
-            row = cursor.next();
-        }
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(row);
-        System.out.println(json);
-    }
-
-    public static void saveBook(JSONObject data) {
-
-        try {
-            MongoClient mongo = new MongoClient("localhost", 27017);
-            DB db = mongo.getDB("testdb");
-            DBCollection bookTable = db.getCollection("user");
-            DBObject dbo = (DBObject) JSON.parse(data.toString());
-            bookTable.insert(dbo);
-        } catch (UnknownHostException | MongoException e) {
-        }
-    }
 }
-
-            //      prettyPrintJSONObjectFromDB(table);
-//            DBCursor cursor = table.find();
-//            while (cursor.hasNext()) {
-//                BasicDBObject account = (BasicDBObject) cursor.next();
-//                System.out.println(account.get("name"));
-//            }
