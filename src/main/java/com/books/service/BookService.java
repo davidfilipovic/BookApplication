@@ -1,6 +1,6 @@
 package com.books.service;
 
-import com.books.controller.Database;
+import com.books.extracting.data.Database;
 import com.books.database.MongoConfiguration;
 import com.books.model.Book;
 import com.mongodb.BasicDBObject;
@@ -55,6 +55,18 @@ public class BookService {
         return listOfBooksByCriteria;
     }
 
+    public List<Book> findBook(String value) {
+
+        List<Book> listOfBooksByCriteria;
+
+        Query titleQuery = new Query();
+        titleQuery.addCriteria(Criteria.where("name").is(value));
+        listOfBooksByCriteria = mongoTemplate.find(titleQuery, Book.class);
+
+        return listOfBooksByCriteria;
+
+    }
+
     public List<String> publishers() {
         List<Book> bookList;
         List<String> publishersList = new ArrayList();
@@ -87,12 +99,8 @@ public class BookService {
         DBObject bookDB = Database.getDatabaseObject().getBook(name);
         JSONArray reviews = (JSONArray) bookDB.get("reviews");
         Book book = mongoTemplate.findOne(query, Book.class);
-               
-         
-       // BasicDBObject book =  //mongoTemplate.findOne(query, Book.class);
-        
-        //System.out.println(book);
-                
 
+        // BasicDBObject book =  //mongoTemplate.findOne(query, Book.class);
+        //System.out.println(book);
     }
 }

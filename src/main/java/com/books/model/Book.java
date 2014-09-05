@@ -30,7 +30,7 @@ public class Book {
     private String numberOfPages = "";
     private String inLanguage = "";
     private String bookFormatType = "";
-    private String bookEdition = "";
+    private String edition = "";
     private String author = "";
     private String image = "";
     private String description = "";
@@ -128,12 +128,12 @@ public class Book {
         this.bookFormatType = bookFormatType;
     }
 
-    public String getBookEdition() {
-        return bookEdition;
+    public String getEdition() {
+        return edition;
     }
 
-    public void setBookEdition(String bookEdition) {
-        this.bookEdition = bookEdition;
+    public void setEdition(String edition) {
+        this.edition = edition;
     }
 
     public String getAuthor() {
