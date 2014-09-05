@@ -20,10 +20,6 @@
         <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
     </context-param>
     
-<!--    <welcome-file-list>
-        <welcome-file>output</welcome-file>
-    </welcome-file-list>-->
-    
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/jsp/error.jsp</location>
@@ -33,8 +29,8 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     
-    <!--<listener>
-        <listener-class>extracting.data.ExtractionListener</listener-class>
+<!--    <listener>
+        <listener-class>com.books.extracting.data.ExtractionListener</listener-class>
     </listener>-->
     
 </web-app>

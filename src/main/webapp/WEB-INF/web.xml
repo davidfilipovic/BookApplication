@@ -29,8 +29,8 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     
-    <listener>
-        <listener-class>extracting.data.ExtractionListener</listener-class>
-    </listener>
+<!--    <listener>
+        <listener-class>com.books.extracting.data.ExtractionListener</listener-class>
+    </listener>-->
     
 </web-app>

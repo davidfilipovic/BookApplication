@@ -287,7 +287,7 @@ public class ExtractingAndStoringData {
                 Arrays.asList("programming", "php", "java", "python", "javaScript", "ruby"));
 
         for (String tag : tagList) {
-            for (int i = 1; i < 1; i++) {
+            for (int i = 1; i < 60; i++) {
                 Document eBooks = retreiveDocumentPage("http://it-ebooks.info/search/?q=" + tag + "&type=title&page=" + i);
                 Elements ebooksElements = eBooks.getElementsByAttribute("title");
                 List<String> eBooksList = retreiveLinksFromPage(ebooksElements);
@@ -350,12 +350,12 @@ public class ExtractingAndStoringData {
 
         String goodreadsSite = "https://www.goodreads.com";
 
-        for (int i = 4; i < 6; i++) {
-            Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page=" + i);//+ i); //
+        for (int i = 1; i < 25; i++) {
+            Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page=" + i);
             Elements goodreadsElements = goodreads.getElementsByClass("bookTitle");
             ArrayList<String> goodreadsList = retreiveLinksFromPage(goodreadsElements);
 
-            for (String bookURL : goodreadsList.subList(0, 1)) {
+            for (String bookURL : goodreadsList) {
 
                 URL goodreadsBook = returnPageInJSON(goodreadsSite, bookURL);
 
