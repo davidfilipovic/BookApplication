@@ -38,7 +38,7 @@ public final class Database {
 
     private Database() {
         initializeDatabase();
-        bookTable = database.getCollection("user");
+        bookTable = database.getCollection("books");
         cursor = bookTable.find();
     }
 
@@ -52,7 +52,7 @@ public final class Database {
     public void initializeDatabase() {
         try {
             mongo = new MongoClient("localhost", 27017);
-            database = mongo.getDB("testdb");
+            database = mongo.getDB("booksdb");
         } catch (UnknownHostException u) {
         } catch (MongoException e) {
         }
@@ -135,7 +135,7 @@ public final class Database {
         if (bookExists(book)) {
             BasicDBObject searchQuery = new BasicDBObject();
             searchQuery.put("name", book);
-            DBCursor bookObject = bookTable.find(searchQuery);
+            //DBCursor bookObject = bookTable.find(searchQuery);
             //    prettyPrintJSONObjectFromDB(bookObject);
         } else {
             System.out.println("Sorry, there is no book with given attribute in database.");

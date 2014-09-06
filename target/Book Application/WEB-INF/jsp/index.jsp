@@ -27,7 +27,20 @@
                         {"width": "10%", "targets": 2}
                     ]
                 });
+                
+                $("#example1").dataTable({
+                    "bProcessing": true,
+                    "bServerSide": false,
+                    "sDom": '<"top"fl>t<"bottom"ip><"clear">',
+                    "oLanguage": {
+                        "sSearch": "Search by book title:"
+                    },
+                    "columnDefs": [
+                        {"width": "100%", "targets": 0},
+                    ]
+                });
             });
+            
 
         </script>
     </head>
@@ -53,7 +66,7 @@
                                 <c:forEach var="book" items="${bookList}">
                                     <tr>
                                         <td>
-                                            <a href="book/find?name=${book.name}">${book.name}</a>
+                                            <a href="BookApplication/book/find?name=${book.name}">${book.name}</a>
                                         </td>
                                         <td>${book.author}</td>
                                         <td>${book.publisher}</td>
@@ -80,7 +93,7 @@
         <table border="1">
             <c:forEach var="pub" items="${pubList}">
                 <tr>
-                    <td><a href="book/pubBooks?publisher=${pub}">${pub}</a></td>
+                    <td><a href="BookApplication?publisher=${pub}">${pub}</a></td>
                 </tr>
             </c:forEach>
         </table>
@@ -93,7 +106,10 @@
             </c:forEach>
         </table>
 
+
+
         <br>
         <br>
+
     </body>
 </html>

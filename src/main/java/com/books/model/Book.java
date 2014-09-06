@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author David
  */
-@Document(collection = "user")
+@Document(collection = "books")
 public class Book {
 
     @Id

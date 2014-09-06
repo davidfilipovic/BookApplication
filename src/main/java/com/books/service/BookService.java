@@ -31,7 +31,7 @@ public class BookService {
 
     MongoOperations mongoTemplate = (MongoOperations) context.getBean("mongoTemplate");
 
-    public static final String COLLECTION_NAME = "user";
+    public static final String COLLECTION_NAME = "books";
 
     public List<Book> listBook() {
         return mongoTemplate.findAll(Book.class, COLLECTION_NAME);

@@ -23,7 +23,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-@RequestMapping("/")
+//@RequestMapping("/")
 public class BookController {
 
     @Autowired
@@ -31,16 +31,10 @@ public class BookController {
 
 //    @RequestMapping(value = "/book", method = RequestMethod.GET)
 //    public String getBookList(ModelMap model) {
-    @RequestMapping(value = "/output", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String printWelcome(@ModelAttribute("book") Book book, BindingResult result, ModelMap model) {
         model.addAttribute("bookList", bookService.listBook());
         model.addAttribute("pubList", bookService.publishers());
-        return "output";
-    }
-
-    @RequestMapping("*")
-    public String hello(HttpServletRequest request) {
-        System.out.println(request.getServletPath());
         return "index";
     }
 
@@ -67,28 +61,29 @@ public class BookController {
         return "book";
     }
 
-//    @RequestMapping(value = "/book/find", method = RequestMethod.GET)
-//    public String getBookOrBooks(@ModelAttribute Book book, ModelMap model) {
+//    @RequestMapping(value = "/book/pubBooks{pub}", method = RequestMethod.GET)
+//    public String getBookOrBooksByPublisher(@ModelAttribute Book book, ModelMap model) {
 //        try {
-//            List<Book> searchBook = bookService.findBookOrBooksByAuthorOrByTitle(book.getName());
-//            model.addAttribute("books", searchBook);
+//            List<Book> searchBooks = bookService.getAllBooksByPublisher(book.getPublisher());
+//            model.addAttribute("pubBooks", searchBooks);
 //        } catch (Exception e) {
 //
 //        }
-//        return "book";
+//        return "index";
 //    }
-    @RequestMapping(value = "/book/pubBooks{pub}", method = RequestMethod.GET)
-    public String getBookOrBooksByPublisher(@ModelAttribute Book book, ModelMap model) {
+    
+    @RequestMapping(value = "{publisher}", method = RequestMethod.GET)
+    public String getBookOrBooksByPublisher1(@PathVariable("publisher") String publisher, ModelMap model) {
         try {
-            List<Book> searchBooks = bookService.getAllBooksByPublisher(book.getPublisher());
+            List<Book> searchBooks = bookService.getAllBooksByPublisher(publisher);
             model.addAttribute("pubBooks", searchBooks);
         } catch (Exception e) {
 
         }
-        return "output";
+        return "index";
     }
 
-    @RequestMapping(value = "/book/find{book}", method = RequestMethod.GET)
+    @RequestMapping(value = "{name}", method = RequestMethod.GET)
     public String getBook(@ModelAttribute Book book, ModelMap model) {
         try {
             List<Book> searchBooks = bookService.findBookOrBooksByAuthorOrByTitle(book.getName());

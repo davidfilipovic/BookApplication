@@ -27,16 +27,24 @@
                         {"width": "10%", "targets": 2}
                     ]
                 });
+                
+                $("#example1").dataTable({
+                    "bProcessing": true,
+                    "bServerSide": false,
+                    "sDom": '<"top"fl>t<"bottom"ip><"clear">',
+                    "oLanguage": {
+                        "sSearch": "Search by book title:"
+                    },
+                    "columnDefs": [
+                        {"width": "100%", "targets": 0},
+                    ]
+                });
             });
+            
 
         </script>
     </head>
     <body>
-
-        <form action="book/find" method="get">
-            <input type="text" id="name" name="name" size="40"/>
-            <input type="submit" value="Find"/>
-        </form>
 
         <form:form action="" method="GET">
             <h2 >Spring MVC pagination using data tables<br><br></h2>
@@ -80,7 +88,7 @@
         <table border="1">
             <c:forEach var="pub" items="${pubList}">
                 <tr>
-                    <td><a href="book/pubBooks?publisher=${pub}">${pub}</a></td>
+                    <td><a href="BookApplication?publisher=${pub}">${pub}</a></td>
                 </tr>
             </c:forEach>
         </table>
@@ -93,7 +101,10 @@
             </c:forEach>
         </table>
 
+
+
         <br>
         <br>
+
     </body>
 </html>

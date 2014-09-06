@@ -8,6 +8,19 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <h1>Hello World!</h1>
+        <div id="home-header">
+            <div class="degree">
+                <div class="wrapper">
+                    <div class="title-holder">
+                        <div class="title-t">
+                            <a href="/">Books application</a>
+                        </div>
+                    </div>
+                    <div class="link">
+                        <a href="/">All books</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

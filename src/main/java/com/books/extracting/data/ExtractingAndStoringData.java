@@ -350,7 +350,7 @@ public class ExtractingAndStoringData {
 
         String goodreadsSite = "https://www.goodreads.com";
 
-        for (int i = 1; i < 25; i++) {
+        for (int i = 7; i < 25; i++) {
             Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page=" + i);
             Elements goodreadsElements = goodreads.getElementsByClass("bookTitle");
             ArrayList<String> goodreadsList = retreiveLinksFromPage(goodreadsElements);

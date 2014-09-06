@@ -89,6 +89,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>Book Application</finalName>
+        <finalName>Books Application</finalName>
     </build>
 </project>
