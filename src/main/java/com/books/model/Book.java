@@ -29,7 +29,7 @@ public class Book {
     private String name = "";
     private String numberOfPages = "";
     private String inLanguage = "";
-    private String bookFormatType = "";
+    private String bookFormat = "";
     private String edition = "";
     private String author = "";
     private String image = "";
@@ -39,6 +39,15 @@ public class Book {
     private String bookSubTitle = "";
     private String readOnlineLink = "";
     private ArrayList reviews;
+    private ReviewRating aggregateRating;
+
+    public ReviewRating getAggregateRating() {
+        return aggregateRating;
+    }
+
+    public void setAggregateRating(ReviewRating aggregateRating) {
+        this.aggregateRating = aggregateRating;
+    }
 
     public String getId() {
         return id;
@@ -120,12 +129,12 @@ public class Book {
         this.inLanguage = inLanguage;
     }
 
-    public String getBookFormatType() {
-        return bookFormatType;
+    public String getBookFormat() {
+        return bookFormat;
     }
 
-    public void setBookFormatType(String bookFormatType) {
-        this.bookFormatType = bookFormatType;
+    public void setBookFormat(String bookFormat) {
+        this.bookFormat = bookFormat;
     }
 
     public String getEdition() {

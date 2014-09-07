@@ -17,10 +17,10 @@
                         </div>
                     </div>
                     <div class="link">
-                        <a href="/BookApplication/">All books</a>
+                        <a href="/BookApplication">All books</a>
                     </div>
                     <div class="top-search">
-                        <form action="" method="get">
+                        <form action="/BookApplication/book/find" method="get">
                             <input type="text" id="name" name="name" size="40" placeholder="Search by title or author"/>
                             <!--<input type="submit" value="Find"/>-->
                         </form>

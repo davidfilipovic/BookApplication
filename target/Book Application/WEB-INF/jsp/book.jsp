@@ -16,7 +16,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
         <title>Book page</title>
     </head>
-  <body>
-
-</body>
+    <body>
+    </body>
 </html>

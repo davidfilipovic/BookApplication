@@ -15,6 +15,6 @@
     </head>
     <body>
         <h1>Sorry, the requested page does not exist.</h1><br>
-        <a href="/BookApplication">Return to index page</a>
+        <a href="/BookApplication/">Return to index page</a>
     </body>
 </html>

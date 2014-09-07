@@ -1,13 +1,16 @@
 package com.books.service;
 
-import com.books.extracting.data.Database;
 import com.books.database.MongoConfiguration;
+import com.books.extracting.data.Database;
 import com.books.model.Book;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import org.json.JSONArray;
@@ -57,11 +60,13 @@ public class BookService {
 
     public List<Book> findBook(String value) {
 
-        List<Book> listOfBooksByCriteria;
+        List<Book> listOfBooksByCriteria = new ArrayList<Book>();
 
         Query titleQuery = new Query();
-        titleQuery.addCriteria(Criteria.where("name").is(value));
-        listOfBooksByCriteria = mongoTemplate.find(titleQuery, Book.class);
+        titleQuery.addCriteria(Criteria.where("name").is(value.trim()));
+        Book book = mongoTemplate.findOne(titleQuery, Book.class);
+
+        listOfBooksByCriteria.add(book);
 
         return listOfBooksByCriteria;
 
@@ -83,10 +88,36 @@ public class BookService {
         return publishersList;
     }
 
+    public List<String> years() {
+        List<Book> bookList;
+        List<String> yearsList = new LinkedList();
+        bookList = mongoTemplate.findAll(Book.class, COLLECTION_NAME);
+
+        for (Book book : bookList) {
+            yearsList.add(book.getDatePublished());
+        }
+        HashSet set = new HashSet();
+        set.addAll(yearsList);
+        yearsList.clear();
+        yearsList.addAll(set);
+        Collections.sort(yearsList);
+
+        return yearsList.subList(0, yearsList.size()-1);
+    }
+
     public List<Book> getAllBooksByPublisher(String publisher) {
 
         Query query = new Query();
         query.addCriteria(Criteria.where("publisher").is(publisher));
+        List<Book> listOfBooksByCriteria = mongoTemplate.find(query, Book.class);
+
+        return listOfBooksByCriteria;
+    }
+
+    public List<Book> getAllBooksByYear(String year) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("datePublished").is(year));
         List<Book> listOfBooksByCriteria = mongoTemplate.find(query, Book.class);
 
         return listOfBooksByCriteria;

@@ -2,8 +2,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.manishchhabra.blog</groupId>
-    <artifactId>BooksApplication</artifactId>
+    <groupId>com.books</groupId>
+    <artifactId>BookApplication</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>BooksApplication</name>
@@ -69,14 +69,14 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
         </dependency>
-
+        
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
-        
+
     </dependencies>
     <build>
         <plugins>
@@ -89,6 +89,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>Books Application</finalName>
+        <finalName>Book Application</finalName>
     </build>
 </project>

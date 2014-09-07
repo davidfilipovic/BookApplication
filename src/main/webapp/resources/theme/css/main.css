@@ -38,7 +38,6 @@ h1, h2, h3, h4, h5, h6{
     text-align:center;
 }
 .headline-l{
-    //margin:25px 0; 
     font-size:17px; 
     text-align:center;
     color: #49494b;
@@ -56,6 +55,13 @@ h1, h2, h3, h4, h5, h6{
     background:#e5e3dc url("../images/pattern5.jpg");
     border-bottom:1px solid #fff;
 }
+
+#home-header-main{
+    height:188px; 
+    background:#e5e3dc url("../images/pattern5.jpg");
+    border-bottom:1px solid #fff;
+}
+
 #home-header .degree, #header .degree{
     background:url("../images/top-degree.png") repeat-x; 
     height:100%;
@@ -69,7 +75,6 @@ h1, h2, h3, h4, h5, h6{
 #home-header .search-err{
     color: #E3121B;
     font-size: 14px;
-    //margin: 0 0 20px;
     width: 210px;
     position: absolute;
     top:70px; 
@@ -113,7 +118,7 @@ h1, h2, h3, h4, h5, h6{
 }
 
 ::-moz-input-placeholder{
-   color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.6);
 }
 
 /* TABLE ------------------------------------------------------------*/
@@ -124,17 +129,14 @@ table, td, th{
 table{
     border-collapse:separate; 
     border-spacing:0; 
-    margin-bottom:28px; 
     width:100%; 
     text-align:left;
 }
 th{
-    color:#fff;
     padding:10px;
-    text-transform:uppercase; 
 }
 td{
-    padding:10px;
+    padding:20px;
     border-bottom:0px solid white;
     border-top:0px solid white; 
 }
@@ -151,6 +153,53 @@ td{
     border-bottom:1px solid white;
     border-top:1px solid white; 
     vertical-align:top;
+}
+
+.table-data a{
+   // text-decoration: none;
+    color: #49494b;//#42c8f4;//#999;//#49494b;
+    font-size: 15px;
+}
+
+.table-pub{
+    border-collapse:separate; 
+    border-spacing:0; 
+    margin-bottom:28px; 
+    width:70%; 
+    text-align:left;
+}
+
+.table-pub td{
+    padding:10px;
+    border-bottom:1px solid white;
+    border-top:1px solid white; 
+    vertical-align:top;
+}
+
+.table-data td{
+    padding:10px;
+    border-bottom:1px solid white;
+    border-top:1px solid white; 
+    vertical-align:top;
+}
+
+.rating-table{
+    border-collapse:separate; 
+    border-spacing:0; 
+  //  width:100%; 
+    text-align:left;
+}
+
+.rating-table td{
+   padding-bottom: 5px;
+   padding-right: 1px;
+   padding-left: 1px;
+   border-bottom: 1px;
+   width: 5px;
+}
+
+.rating{
+     margin-top: 30px;
 }
 
 /* TITLE ------------------------------------------------------------*/
@@ -171,6 +220,15 @@ td{
     margin-top:40px;
     margin-left:23px;
 }
+
+.title-holder .title-m{
+    display:block; 
+    float:left;
+    font-size:28px;
+    color:#49494b;
+    margin-top:40px;
+}
+
 .title-holder .title-t a{
     color:#49494b;
 }
@@ -220,6 +278,7 @@ td{
 .text-main{
     text-align: justify;
     margin-bottom: 30px;
+    line-height: 120%;
 }
 .fmr-div{
     display: flex;
@@ -231,6 +290,19 @@ td{
     overflow:hidden; 
     top:-90px; 
     min-height:1050px;
+}
+
+.home-content-main{
+    position:relative; 
+    overflow:hidden; 
+   // top:-90px; 
+    min-height:1050px;
+}
+
+.home-content-main a{
+    // text-decoration: none;
+    color: #49494b;//#42c8f4;//#999;//#49494b;
+    font-size: 15px;
 }
 
 .thumb-d {
@@ -245,20 +317,7 @@ td{
     padding-right: 15px;
     margin-right: 15px;
 }
-.front-right-col-title{
-    width:100%;
-    height: 50px;
-    //float:right;
-    padding-right: 15px;
-    margin-right: 10px;
-    margin-left: 0px;
-}
-.shadow-divider1{
-    background:url("../images/sprites.png") no-repeat 0 416px;
-    margin-top:20px;
-    float: right;
-    border-left: thick solid;
-}
+
 .bullet-title{
     background:url("../images/sprites.png") no-repeat 0 -815px;
     padding-left:40px;
@@ -391,7 +450,7 @@ td{
     color:#adadad;
     font-size:12px; 
     text-align:left;
-   // width: 300px;
+    // width: 300px;
     float: left;
     margin-top: 5px;
     margin-bottom: 10px;
