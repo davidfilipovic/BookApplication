@@ -26,6 +26,8 @@ The final product is application which crawles data from sites [Goodreads](https
 
 When application starts, the fist page, **/index**, shows all books that exists in database. User can choose number of books to be shown in page, and in search box user can search books by title, author or publisher. When user click on book link, in page **/book** is presented all informations about that book. Depending on whether that book has been updated by another site or not, it may show more or less information. For example, if the book has been crawled from the site IT E Books, but didn't get updated from the site Goodreads, user can see basic informations about book, like book author, name, date published, link for reading book online (if book contains such link), etc. On other hand, if the book has been updated by site Goodreads, user can notice book reviews, book rating, rating count, number of pages, ets. 
 
+On **/book** page, user can search for specific book or author, which will be then shown on the same page. From **/index** page, user can navigate to **/search** page which conatins list of all publishers, as well as list of all years available. When user choose publisher, in table shows all books by that publisher, and when he choose year, table shows all book by that publisher which are published in that year. Also, user can choose option to show only books which contains link for reading book online. 
+ 
 ## 4. Used technologies and instaling instructions
 
  This project has been created as a Maven project by using Spring MVC Framework in Java.
