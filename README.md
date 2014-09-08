@@ -17,7 +17,7 @@ The following phases are recognized through application workflow:
 
  For this application, I've used **mongoDB**, which is NoSQL database, and presents cross-platform document-oriented database.
  
-  To start it, get mongo database from this [link](http://www.mongodb.org), install it, then navigate to *../bin/mongodb* and wait until it has made connection to the localhost. To start a command line, run *../bin/mongo* file. Simple commands would be *use [database name]* for choosing a database to work with, and *db.[collection.name].find()* for showing all documents for selected collection. 
+  To start it, get mongo database from this [link](http://www.mongodb.org), install it, then navigate to *../bin/mongodb* and wait until it has made connection to the localhost. To start a command line, run **../bin/mongo** file. Simple commands would be *use [database name]* for choosing a database to work with, and **db.[collection.name].find()** for showing all documents for selected collection. 
   
   To crawl data from the web page, there is ExtractionListener class which implements ServletContextListener. ExtractionListener enables automatic gathering of the data, and starts crawling when the application starts. To disable ExtractionListener, simply comment listener tag in web.xml file. Notice that crawling of data may take a while, depending on internet connection speed. 
  
