@@ -13,6 +13,8 @@ The following phases are recognized through application workflow:
 
 ## 2. Domain model
 
+According to schema:Book, the following domain model has been created: 
+
 ## 3. Solution
 
 The final product is application which crawles data from sites [Goodreads](https://www.goodreads.com) and [IT E Books](http://it-ebooks.info), and stores them into local repository in JSON format. By implementing Spring Framework, data can be accessed and queried in web browser. 
