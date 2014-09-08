@@ -89,6 +89,8 @@
                                                 <c:choose>
                                                     <c:when test="${book.readOnlineLink == 'http://it-ebooks.info'}">
                                                     </c:when>
+                                                      <c:when test="${book.readOnlineLink == 'N/A'}">
+                                                    </c:when>
                                                     <c:otherwise>
                                                         <tr>
                                                             <td><b>Read online:</b></td> 
@@ -100,7 +102,6 @@
                                                 </c:choose>
                                             </table>
                                         </td>
-                                        <!--<td width="50" align="right"></td>-->
                                     </tr>
                                 </table>
 

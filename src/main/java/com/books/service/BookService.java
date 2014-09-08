@@ -17,11 +17,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BookService {
 
-//    @Autowired
-//    private MongoTemplate mongoTemplate;
     ApplicationContext context
             = new AnnotationConfigApplicationContext(MongoConfiguration.class);
-    //  MongoTemplate mongoTemplate = (MongoTemplate) ctx.getBean("mongoTemplate");
 
     MongoOperations mongoTemplate = (MongoOperations) context.getBean("mongoTemplate");
 

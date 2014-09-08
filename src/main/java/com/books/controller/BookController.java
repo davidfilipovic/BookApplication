@@ -170,7 +170,7 @@ public class BookController {
     @RequestMapping(value = "book/find{name}", method = RequestMethod.GET)
     public String getBookByLink(@ModelAttribute Book book, @ModelAttribute("name") String name, ModelMap model) {
         try {
-            List<Book> searchBooks = bookService.findBook(book.getName());
+            List<Book> searchBooks = bookService.findBookOrBooksByAuthorOrByTitle(book.getName());
             if (!searchBooks.contains(null)) {
                 model.addAttribute("books", searchBooks);
             }

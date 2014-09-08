@@ -165,7 +165,7 @@ public class ExtractingAndStoringData {
             JSONArray reviews = jsonArrayGoodreads.getJSONObject(1).getJSONArray("reviews");
             int counter = 0;
             JSONObject jsonObject;
-            while (counter < 1) {
+            while (counter < 6) {
                 try {
                     jsonObject = reviews.getJSONObject(counter);
                 } catch (JSONException e) {

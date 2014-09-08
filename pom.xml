@@ -6,7 +6,7 @@
     <artifactId>BookApplication</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>BooksApplication</name>
+    <name>BookApplication</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
