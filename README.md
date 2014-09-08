@@ -2,7 +2,7 @@ Book Application created using Spring MVC Framework and MongoDB in Java
 
 ## 1. Details about the project
 
-Main idea of this project is to acquire data from the different sites about books into one document, which will be then presented as integrated informations about one specific book. Besides that, application provides a set of search options, for quering database with suplied attributes. Books are crawled from the [Goodreads](https://www.goodreads.com) and from [IT E Books](http://it-ebooks.info) site, and then stored in the local repository (MongoDB). Microdata from the book pages is gathered using [Microdata to RDF Distiller](http://www.w3.org/2012/pyMicrodata/), and the output format is set to JSON LD. Schema used for storing books is schema:Book. 
+The main idea of this project is to acquire data from the different sites about books into one document, which will be then presented as integrated information about one specific book. Besides that, application provides a set of search options, for quering database with suplied attributes. Books are crawled from the [Goodreads](https://www.goodreads.com) and from [IT E Books](http://it-ebooks.info) site, and then stored in the local repository (MongoDB). Microdata from the book pages is gathered using [Microdata to RDF Distiller](http://www.w3.org/2012/pyMicrodata/), and the output format is set to JSON LD. Schema used for storing books is schema:Book. 
 
 The following phases are recognized through application workflow: 
 
@@ -16,17 +16,17 @@ The following phases are recognized through application workflow:
 According to schema:Book, the following domain model has been created: 
 ![Picture 1 - Domain model](DomainModel.jpg)
 
-Class Book conatins most of the informations about specified book. Among others, there are informations about book name, author, date published, publisher, number of pages, book format, etc. 
+Class Book contains the most of the information about specified book. Among others, there is information about book name, author, date published, publisher, number of pages, book format, etc. 
 
-Class AggregateRating contains informations about rating value and review count, and in array review there are informations about reviews for the book, like author name, review body, date published and review rating.  
+Class AggregateRating contains information about rating value and review count, and in array review there are informations about reviews for the book, like author name, review body, date published and review rating.  
 
 ## 3. Solution
 
 The final product is application which crawles data from sites [Goodreads](https://www.goodreads.com) and [IT E Books](http://it-ebooks.info), and stores them into local repository in JSON format. By implementing Spring Framework, data can be accessed and queried in web browser. 
 
-When application starts, the fist page, **/index**, shows all books that exists in database. User can choose number of books to be shown in page, and in search box user can search books by title, author or publisher. When user click on book link, page **/book** presents all informations about that book. Depending on whether that book has been updated by another site or not, it may show more or less information. For example, if the book has been crawled from the site IT E Books, but didn't get updated from the site Goodreads, user can see basic informations about book, like book author, name, date published, link for reading book online (if book contains such link), etc. On other hand, if the book has been updated by site Goodreads, user can notice book reviews, book rating, rating count, number of pages, ets. 
+When application starts, the fist page, **/index**, shows all books that exist in database. User can choose number of books to be shown in page, and in search box user can search books by title, author or publisher. When user clicks on the book link, page **/book** presents all information about that book. Depending on whether that book has been updated by another site or not, it may show more or less information. For example, if the book has been crawled from the site IT E Books, but didn't get updated from the site Goodreads, user can see basic information about book, like book author, name, date published, link for reading book online (if book contains such link), etc. On the other hand, if the book has been updated by site Goodreads, user can notice book reviews, book rating, rating count, number of pages, ets. 
 
-On **/book** page, user can search for specific book or author, which will be then shown on the same page. From **/index** page, user can navigate to **/search** page which conatins list of all publishers, as well as list of all years available. When user choose publisher, table shows all books by that publisher, and when he choose year, table shows all book by that publisher which are published in that year. Also, user can choose option to show only books which contains link for reading book online. 
+On **/book** page, user can search for specific book or author, which will be then shown on the same page. From **/index** page, user can navigate to **/search** page which conatins list of all publishers, as well as list of all years available. When user chooses publisher, table shows all books by that publisher, and when he chooses year, table shows all book by that publisher which are published in that year. Also, user can choose option to show only books which contains link for reading book online. 
  
 ## 4. Used technologies and instaling instructions
 
@@ -34,7 +34,7 @@ On **/book** page, user can search for specific book or author, which will be th
 
  For this application, I've used **mongoDB**, which is NoSQL database, and presents cross-platform document-oriented database.
  
-  To start it, get mongo database from this [link](http://www.mongodb.org), install it, then navigate to *../bin/mongodb* and wait until it has made connection to the localhost. To start a command line, run *../bin/mongo* file. Simple commands would be **use [database name]** for choosing a database to work with, and **db.[collection.name].find()** for showing all documents for selected collection. 
+  To start it, get mongo database from this [link](http://www.mongodb.org), install it, then navigate to *../bin/mongodb* and wait until it makes connection to the localhost. To start a command line, run *../bin/mongo* file. Simple commands would be **use [database name]** for choosing a database to work with, and **db.[collection.name].find()** for showing all documents for selected collection. 
   
   To crawl data from the web page, there is ExtractionListener class which implements ServletContextListener. ExtractionListener enables automatic gathering of the data, and starts crawling when the application starts. To disable ExtractionListener, simply comment listener tag in web.xml file (this is set by default). Notice that crawling of data may take a while, depending on internet connection speed. 
   
@@ -42,9 +42,9 @@ On **/book** page, user can search for specific book or author, which will be th
   
  Dependencies: 
  
- [JSON for Java](http://www.json.org/java/). JSON is a light-weight, language independent, data interchange format. The files in this package implement JSON encoders/decoders in Java. It also includes the capability to convert between JSON and XML, HTTP headers, Cookies, and CDL. In project is also used [Gson](https://code.google.com/p/google-gson/) which presents open source Java library for serializing and deserializing Java objects to (and from) JSON.
+ [JSON for Java](http://www.json.org/java/). JSON is a light-weight, language independent, data interchange format. The files in this package implement JSON encoders/decoders in Java. It also includes the capability to convert between JSON and XML, HTTP headers, Cookies, and CDL. [Gson](https://code.google.com/p/google-gson/) is also used whithin the project which presents open source Java library for serializing and deserializing Java objects to (and from) JSON.
  
- [Jsoup library](http://jsoup.org). Jsoup is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods. It is an excelent and easy to implement library, with rich documentation. 
+ [Jsoup library](http://jsoup.org). Jsoup is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods. It is excelent and easy to implement jsoup library, and contains rich documentation. 
  
  [Spring MVC](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html). The Spring web MVC framework provides model-view-controller architecture and ready components that can be used to develop flexible and loosely coupled web applications. The MVC pattern results in separating the different aspects of the application (input logic, business logic, and UI logic), while providing a loose coupling between these elements.
 
