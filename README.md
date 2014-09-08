@@ -16,9 +16,15 @@ The following phases are recognized through application workflow:
 According to schema:Book, the following domain model has been created: 
 ![Picture 1 - Domain model](DomainModel.jpg)
 
+Class Book conatins most of the informations about specified book. Among others, there are informations about book name, author, date published, publisher, number of pages, book format, etc. 
+
+Class AggregateRating contains informations about rating value and review count, and in array review there are informations about reviews for the book, like author name, review body, date published and review rating.  
+
 ## 3. Solution
 
 The final product is application which crawles data from sites [Goodreads](https://www.goodreads.com) and [IT E Books](http://it-ebooks.info), and stores them into local repository in JSON format. By implementing Spring Framework, data can be accessed and queried in web browser. 
+
+When application starts, the fist page, **/index**, shows all books that exists in database. User can choose number of books to be shown in page, and in search box user can search books by title, author or publisher. When user click on book link, in page **/book** is presented all informations about that book. Depending on whether that book has been updated by another site or not, it may show more or less information. For example, if the book has been crawled from the site IT E Books, but didn't get updated from the site Goodreads, user can see basic informations about book, like book author, name, date published, link for reading book online (if book contains such link), etc. On other hand, if the book has been updated by site Goodreads, user can notice book reviews, book rating, rating count, number of pages, ets. 
 
 ## 4. Used technologies and instaling instructions
 
