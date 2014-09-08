@@ -15,6 +15,8 @@ The following phases are recognized through application workflow:
 
 ## 3. Solution
 
+The final product is application which crawles data from sites [Goodreads](https://www.goodreads.com) and [IT E Books](http://it-ebooks.info), and stores them into local repository in JSON format. By implementing Spring Framework, data can be accessed and queried in web browser. 
+
 ## 4. Used technologies and instaling instructions
 
  This project has been created as a Maven project by using Spring MVC Framework in Java.
@@ -23,7 +25,7 @@ The following phases are recognized through application workflow:
  
   To start it, get mongo database from this [link](http://www.mongodb.org), install it, then navigate to *../bin/mongodb* and wait until it has made connection to the localhost. To start a command line, run *../bin/mongo* file. Simple commands would be **use [database name]** for choosing a database to work with, and **db.[collection.name].find()** for showing all documents for selected collection. 
   
-  To crawl data from the web page, there is ExtractionListener class which implements ServletContextListener. ExtractionListener enables automatic gathering of the data, and starts crawling when the application starts. To disable ExtractionListener, simply comment listener tag in web.xml file. Notice that crawling of data may take a while, depending on internet connection speed. 
+  To crawl data from the web page, there is ExtractionListener class which implements ServletContextListener. ExtractionListener enables automatic gathering of the data, and starts crawling when the application starts. To disable ExtractionListener, simply comment listener tag in web.xml file (this is set by default). Notice that crawling of data may take a while, depending on internet connection speed. 
   
   Other way to insert data into application is to copy database from db folder (in the root of application) to MongoDB default data folder (c:/data), before mongodb.exe is started. This will automaticaly insert all books into MongoBD, and application is ready for use. 
   
