@@ -11,7 +11,7 @@ The following phases are recognized through application workflow:
 * Data is persisted into MongoDB
 * A web project enables data quering and their presentation
 
-##Used technologies and instalint instrunctions
+##Used technologies and instaling instructions
 
  This project has been created as a Maven project by using Spring MVC Framework in Java.
 
