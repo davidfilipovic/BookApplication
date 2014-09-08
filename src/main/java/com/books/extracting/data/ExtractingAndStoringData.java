@@ -390,9 +390,11 @@ public class ExtractingAndStoringData {
             } catch (Exception e) {
             }
 
+            try{
             Element imageElement = goodreadsDocument.getElementById("coverImage");
             image = imageElement.attr("src");
-
+            } catch(Exception e){
+            }
             try {
                 awards = jsonArrayGoodreads.getJSONObject(1).getString("awards");
             } catch (JSONException e) {
