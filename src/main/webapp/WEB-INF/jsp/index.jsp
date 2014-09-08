@@ -62,8 +62,7 @@
         <div id="main">
             <div class="wrapper">
                 <div class="home-content-main">
-                    
-                      <a href="/BookApplication/search">click</a>
+
 
                     <form:form action="" method="GET">
                         <h2 >List of all books<br><br></h2>
@@ -93,8 +92,11 @@
                         </table>
                     </form:form>
 
-                    <br><br><br><br>
+                    <br><br>
 
+                    <a href="/BookApplication/search"><h4>Advanced search</h4></a>
+                    
+                     <br><br><br><br>
                 </div>
             </div>
         </div>

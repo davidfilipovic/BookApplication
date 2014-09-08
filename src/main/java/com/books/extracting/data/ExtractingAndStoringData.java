@@ -5,19 +5,7 @@
  */
 package com.books.extracting.data;
 
-import com.books.extracting.data.Database;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-import com.mongodb.util.JSON;
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -288,7 +276,7 @@ public class ExtractingAndStoringData {
                 Arrays.asList("programming", "php", "java", "python", "javaScript", "ruby"));
 
         for (String tag : tagList) {
-            for (int i = 1; i < 2; i++) {
+            for (int i = 1; i < 60; i++) {
                 Document eBooks = retreiveDocumentPage("http://it-ebooks.info/search/?q=" + tag + "&type=title&page=" + i);
                 Elements ebooksElements = eBooks.getElementsByAttribute("title");
                 List<String> eBooksList = retreiveLinksFromPage(ebooksElements);
@@ -303,7 +291,6 @@ public class ExtractingAndStoringData {
                     finalEBooksList.add(eBooksList.get(j));
                 }
                 for (String eBookURL : finalEBooksList) {
-                    //String eBookURL = "/book/278/";
 
                     URL ebooksBook = returnPageInJSON(itEBooksSite, eBookURL);
                     String jsonStringEBooks = prepareStringForJSONTransformation(ebooksBook);
@@ -358,13 +345,12 @@ public class ExtractingAndStoringData {
 
         String goodreadsSite = "https://www.goodreads.com";
 
-         for (int i = 7; i < 25; i++) {
-        Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page=1"); //+ i);
+         for (int i = 1; i < 25; i++) {
+        Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page="+ i);
         Elements goodreadsElements = goodreads.getElementsByClass("bookTitle");
         ArrayList<String> goodreadsList = retreiveLinksFromPage(goodreadsElements);
 
-         for (String bookURL : goodreadsList.subList(0, 1)) {
-        //String bookURL = "/book/show/3264934-head-first-php-mysql?from_search=true";
+         for (String bookURL : goodreadsList) {
 
         URL goodreadsBook = returnPageInJSON(goodreadsSite, bookURL);
 

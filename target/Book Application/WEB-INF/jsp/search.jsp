@@ -48,8 +48,8 @@
                         {"width": "30%", "targets": 2}
                     ]
                 });
-                
-                 $("#example3").dataTable({
+
+                $("#example3").dataTable({
                     "bProcessing": true,
                     "bServerSide": false,
                     "sDom": '<"top"fl>t<"bottom"ip><"clear">',
@@ -116,9 +116,7 @@
                         </tr>
                     </table>
 
-                    
                     <br><br><br>
-
 
                     <form:form action="" method="GET">
                         <table width="80%" style="border: 3px;background: rgb(243, 244, 248);"><tr><td>
@@ -151,7 +149,7 @@
                                             </c:when>
                                             <c:when test="${! empty yearBooks}">
                                                 <tbody>
-                                                <h3>List of all books by year ${year}<br><br></h3>
+                                                <h3>List of all books for year ${year}<br><br></h3>
                                                     <c:forEach var="book" items="${yearBooks}">
                                                     <tr>
                                                         <td>
@@ -173,6 +171,78 @@
                             </tr>
                         </table>
                     </form:form>
+
+                    <br><br><br>
+
+                    <c:if test="${(check.isChecked) && (! empty booksReadOnlineYear)}">
+                        <form:form action="" method="GET">
+                            <table width="80%" style="border: 3px;background: rgb(243, 244, 248);"><tr><td>
+                                        <table id="example3" class="display" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Year</th>
+                                                    <th>Publisher</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <h3>List of all books for ${year} with link for online reading<br><br></h3>
+                                                <c:forEach var="book" items="${booksReadOnlineYear}">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/BookApplication/book/find?name=${book.name}">${book.name}</a>
+                                                    </td>
+                                                    <td>
+                                                        ${book.datePublished}
+                                                    </td>
+                                                    <td>
+                                                        ${book.publisher}
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form:form>
+                    </c:if>
+
+                    <br><br><br>
+
+                    <c:if test="${(check.isChecked) && (! empty booksReadOnlinePublisher)}">
+                        <form:form action="" method="GET">
+                            <table width="80%" style="border: 3px;background: rgb(243, 244, 248);"><tr><td>
+                                        <table id="example3" class="display" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Year</th>
+                                                    <th>Publisher</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <h3>List of all books for ${publisher} with link for online reading<br><br></h3>
+                                                <c:forEach var="book" items="${booksReadOnlinePublisher}">
+                                                <tr>
+                                                    <td>
+                                                        <a href="/BookApplication/book/find?name=${book.name}">${book.name}</a>
+                                                    </td>
+                                                    <td>
+                                                        ${book.datePublished}
+                                                    </td>
+                                                    <td>
+                                                        ${book.publisher}
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form:form>
+                    </c:if>
 
                     <br><br><br>
 
@@ -213,39 +283,6 @@
                     </c:choose>
 
                     <br><br><br>
-
-                        <c:if test="${(check.isChecked) && (! empty booksReadOnlineYear)}">
-                            <form:form action="" method="GET">
-                                <table width="80%" style="border: 3px;background: rgb(243, 244, 248);"><tr><td>
-                                            <table id="example3" class="display" cellspacing="0" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Year</th>
-                                                        <th>Publisher</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <c:forEach var="book" items="${booksReadOnlineYear}">
-                                                    <tr>
-                                                        <td>
-                                                            <a href="/BookApplication/book/find?name=${book.name}">${book.name}</a>
-                                                        </td>
-                                                        <td>
-                                                            ${book.datePublished}
-                                                        </td>
-                                                        <td>
-                                                            ${book.publisher}
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form:form>
-                        </c:if>
 
                     <br><br><br>
 

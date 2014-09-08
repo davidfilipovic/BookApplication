@@ -1,24 +1,15 @@
 package com.books.service;
 
 import com.books.database.MongoConfiguration;
-import com.books.extracting.data.Database;
 import com.books.model.Book;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
-import org.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -102,7 +93,7 @@ public class BookService {
         yearsList.addAll(set);
         Collections.sort(yearsList);
 
-        return yearsList.subList(0, yearsList.size() - 1);
+        return yearsList.subList(0, yearsList.size() - 5);
     }
 
     public List<Book> getAllBooksByPublisher(String publisher) {
@@ -140,4 +131,11 @@ public class BookService {
         return listOfBooksByCriteria;
     }
 
+    public List<Book> getAllReadOnlineBooksPublisher(String publisher) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("readOnlineLink").regex(".*read.*").and("publisher").is(publisher));
+        List<Book> listOfBooksByCriteria = mongoTemplate.find(query, Book.class);
+
+        return listOfBooksByCriteria;
+    }
 }

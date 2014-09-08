@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -17,7 +16,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
-import static java.lang.System.out;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,8 +133,6 @@ public final class Database {
         if (bookExists(book)) {
             BasicDBObject searchQuery = new BasicDBObject();
             searchQuery.put("name", book);
-            //DBCursor bookObject = bookTable.find(searchQuery);
-            //    prettyPrintJSONObjectFromDB(bookObject);
         } else {
             System.out.println("Sorry, there is no book with given attribute in database.");
         }
