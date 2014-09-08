@@ -26,6 +26,20 @@ The following phases are recognized through application workflow:
   To crawl data from the web page, there is ExtractionListener class which implements ServletContextListener. ExtractionListener enables automatic gathering of the data, and starts crawling when the application starts. To disable ExtractionListener, simply comment listener tag in web.xml file. Notice that crawling of data may take a while, depending on internet connection speed. 
   
   Other way to insert data into application is to copy database from db folder (in the root of application) to MongoDB default data folder (c:/data), before mongodb.exe is started. This will automaticaly insert all books into MongoBD, and application is ready for use. 
+  
+ Dependencies: 
+ 
+ [JSON for Java](http://www.json.org/java/). JSON is a light-weight, language independent, data interchange format. The files in this package implement JSON encoders/decoders in Java. It also includes the capability to convert between JSON and XML, HTTP headers, Cookies, and CDL. In project is also used [Gson](https://code.google.com/p/google-gson/) which presents open source Java library for serializing and deserializing Java objects to (and from) JSON.
+ 
+ [Jsoup library](http://jsoup.org). Jsoup is a Java library for working with real-world HTML. It provides a very convenient API for extracting and manipulating data, using the best of DOM, CSS, and jquery-like methods. It is an excelent and easy to implement library, with rich documentation. 
+ 
+ [Spring MVC](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html). The Spring web MVC framework provides model-view-controller architecture and ready components that can be used to develop flexible and loosely coupled web applications. The MVC pattern results in separating the different aspects of the application (input logic, business logic, and UI logic), while providing a loose coupling between these elements.
+
+* The **Model** encapsulates the application data and in general they will consist of POJO.
+
+* The **View** is responsible for rendering the model data and in general it generates HTML output that the client's browser can interpret.
+
+* The **Controller** is responsible for processing user requests and building appropriate model and passes it to the view for rendering.
  
 ## 5. Licence
 
