@@ -38,7 +38,7 @@ On **/book** page, user can search for specific book or author, which will be th
   
   To crawl data from the web page, there is ExtractionListener class which implements ServletContextListener. ExtractionListener enables automatic gathering of the data, and starts crawling when the application starts. To disable ExtractionListener, simply comment listener tag in web.xml file (this is set by default). Notice that crawling of data may take a while, depending on internet connection speed. 
   
-  Other way to insert data into application is to copy database from db folder (in the root of application) to MongoDB default data folder (c:/data), before mongodb.exe is started. This will automaticaly insert all books into MongoBD, and application is ready for use. 
+  Other way to insert data into application is to copy database from the root of application to MongoDB default data folder (c:/data), before mongodb.exe is started. This will automaticaly insert all books into MongoBD, and application is ready for use. 
   
  Dependencies: 
  
