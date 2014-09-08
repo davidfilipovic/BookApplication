@@ -2,6 +2,7 @@ package com.books.controller;
 
 import com.books.model.Book;
 import com.books.model.BookJSONObject;
+import com.books.model.CheckBoxClass;
 import com.books.service.BookService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,32 +73,79 @@ public class BookController {
     public String getElements(@ModelAttribute Book book, ModelMap model, HttpServletRequest request, HttpServletResponse response) {
         try {
             ModelMap addedModel = returnModel(model);
-            HttpSession session = request.getSession();
-            session.setAttribute("pubList", bookService.publishers());
+            model.addAttribute("check", new CheckBoxClass());
         } catch (Exception e) {
         }
         return "search";
     }
 
+    
     @RequestMapping(value = "/search/resp{publisher}", method = RequestMethod.GET)
-    public String getBookOrBooksByPublisher(@ModelAttribute("publisher") String publisher, @ModelAttribute Book book, ModelMap model) {
+    public String getBookOrBooksByPublisher(@ModelAttribute("publisher") String publisher,
+            HttpServletRequest request, ModelMap model, @ModelAttribute CheckBoxClass cbc) {
         try {
             List<Book> searchBooksPub = bookService.getAllBooksByPublisher(publisher);
             ModelMap addedModel = returnModel(model);
             model.addAttribute("pubBooks", searchBooksPub);
-            model.addAttribute("publisher", book.getPublisher());
+            model.addAttribute("publisher", publisher);
+            HttpSession session = request.getSession();
+            session.setAttribute("publisher", publisher);
+            String year = (String) session.getAttribute("year");
+            model.addAttribute("yearSession", year);
+            model.addAttribute("check", cbc);
+
+            List<Book> findBooksForYearAndPublisher = bookService.getAllBooksByPublisherForYear(year, publisher);
+            model.addAttribute("booksForYearAndPublisher", findBooksForYearAndPublisher);
         } catch (Exception e) {
         }
         return "search";
     }
 
     @RequestMapping(value = "/search/resy{year}", method = RequestMethod.GET)
-    public String getBookOrBooksByYear(@ModelAttribute("year") String year, @ModelAttribute Book book, ModelMap model) {
+    public String getBookOrBooksByYear(@ModelAttribute("year") String year, @ModelAttribute Book book,
+            ModelMap model, HttpServletRequest request, @ModelAttribute CheckBoxClass cbc) {
         try {
             List<Book> searchBooksYear = bookService.getAllBooksByYear(year);
             ModelMap addedModel = returnModel(model);
             model.addAttribute("yearBooks", searchBooksYear);
             model.addAttribute("year", year);
+            HttpSession session = request.getSession();
+            session.setAttribute("year", year);
+            String publisher = (String) session.getAttribute("publisher");
+            model.addAttribute("publisherSession", publisher);
+            model.addAttribute("check", cbc);
+            
+            List<Book> findBooksForYearAndPublisher = bookService.getAllBooksByPublisherForYear(year, publisher);
+            model.addAttribute("booksForYearAndPublisher", findBooksForYearAndPublisher);
+            
+            List<Book> readOnlineBooks = bookService.getAllReadOnlineBooksYear(year);
+            model.addAttribute("booksReadOnlineYear", readOnlineBooks);
+             
+        } catch (Exception e) {
+        }
+        return "search";
+    }
+    
+     @RequestMapping(value = "/search/resy{year}", method = RequestMethod.POST)
+    public String getBookOrBooksByYeara(@ModelAttribute("year") String year, @ModelAttribute Book book,
+            ModelMap model, HttpServletRequest request, @ModelAttribute CheckBoxClass cbc) {
+        try {
+            List<Book> searchBooksYear = bookService.getAllBooksByYear(year);
+            ModelMap addedModel = returnModel(model);
+            model.addAttribute("yearBooks", searchBooksYear);
+            model.addAttribute("year", year);
+            HttpSession session = request.getSession();
+            session.setAttribute("year", year);
+            String publisher = (String) session.getAttribute("publisher");
+            model.addAttribute("publisherSession", publisher);
+            model.addAttribute("check", cbc);
+            
+            List<Book> findBooksForYearAndPublisher = bookService.getAllBooksByPublisherForYear(year, publisher);
+            model.addAttribute("booksForYearAndPublisher", findBooksForYearAndPublisher);
+            
+            List<Book> readOnlineBooks = bookService.getAllReadOnlineBooksYear(year);
+            model.addAttribute("booksReadOnlineYear", readOnlineBooks);
+             
         } catch (Exception e) {
         }
         return "search";
@@ -114,16 +162,4 @@ public class BookController {
         }
         return "book";
     }
-
-//    @RequestMapping(value = "{name}", method = RequestMethod.GET)
-//    public String getBook(@ModelAttribute("name") String name, @ModelAttribute Book book, ModelMap model) {
-//        try {
-//            List<Book> searchBooks = bookService.findBookOrBooksByAuthorOrByTitle(name);
-//            if (!searchBooks.contains(null)) {
-//                model.addAttribute("books", searchBooks);
-//            }
-//        } catch (Exception e) {
-//        }
-//        return "book";
-//    }
 }

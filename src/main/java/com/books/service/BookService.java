@@ -102,7 +102,7 @@ public class BookService {
         yearsList.addAll(set);
         Collections.sort(yearsList);
 
-        return yearsList.subList(0, yearsList.size()-1);
+        return yearsList.subList(0, yearsList.size() - 1);
     }
 
     public List<Book> getAllBooksByPublisher(String publisher) {
@@ -123,15 +123,21 @@ public class BookService {
         return listOfBooksByCriteria;
     }
 
-    public void getJSONArray(String name) {
+    public List<Book> getAllBooksByPublisherForYear(String year, String publisher) {
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name));
-        DBObject bookDB = Database.getDatabaseObject().getBook(name);
-        JSONArray reviews = (JSONArray) bookDB.get("reviews");
-        Book book = mongoTemplate.findOne(query, Book.class);
+        query.addCriteria(Criteria.where("publisher").is(publisher).and("datePublished").is(year));
+        List<Book> listOfBooksByCriteria = mongoTemplate.find(query, Book.class);
 
-        // BasicDBObject book =  //mongoTemplate.findOne(query, Book.class);
-        //System.out.println(book);
+        return listOfBooksByCriteria;
     }
+
+    public List<Book> getAllReadOnlineBooksYear(String year) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("readOnlineLink").regex(".*read.*").and("datePublished").is(year));
+        List<Book> listOfBooksByCriteria = mongoTemplate.find(query, Book.class);
+
+        return listOfBooksByCriteria;
+    }
+
 }

@@ -29,8 +29,13 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     
-<!--    <listener>
+    <!--    <listener>
         <listener-class>com.books.extracting.data.ExtractionListener</listener-class>
     </listener>
     -->
+    
+    <session-config>  
+        <session-timeout>10</session-timeout>  
+    </session-config>  
+    
 </web-app>

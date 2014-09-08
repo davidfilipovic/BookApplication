@@ -5,6 +5,7 @@
  */
 package com.books.extracting.data;
 
+import com.books.extracting.data.Database;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
@@ -38,23 +39,23 @@ import org.jsoup.select.Elements;
  */
 public class ExtractingAndStoringData {
 
-    String awards = "";
-    String ratingValue = "";
-    String ratingCount = "";
-    String type = "";
-    String isbn = "";
-    String bookName = "";
-    String numberOfPages = "";
-    String inLanguage = "";
-    String bookFormatType = "";
-    String bookEdition = "";
-    String author = "";
-    String image = "";
-    String description = "";
-    String datePublished = "";
-    String publisher = "";
-    String bookSubTitle = "";
-    String readOnlineLink = "";
+    String awards = "N/A";
+    String ratingValue = "N/A";
+    String ratingCount = "N/A";
+    String type = "N/A";
+    String isbn = "N/A";
+    String bookName = "N/A";
+    String numberOfPages = "N/A";
+    String inLanguage = "N/A";
+    String bookFormatType = "N/A";
+    String bookEdition = "N/A";
+    String author = "N/A";
+    String image = "N/A";
+    String description = "N/A";
+    String datePublished = "N/A";
+    String publisher = "N/A";
+    String bookSubTitle = "N/A";
+    String readOnlineLink = "N/A";
     JSONArray reviewArray;
 
     public static Document retreiveDocumentPage(String requestURL) {
@@ -120,6 +121,7 @@ public class ExtractingAndStoringData {
         try {
             Elements reviewElement = reviewPageGoodreads.getElementsByClass("staticStars");
             reviewRating = reviewElement.get(0).text();
+            reviewRating = reviewRating.substring(0, 6);
         } catch (Exception e) {
             reviewRating = "No rating.";
         }
@@ -130,7 +132,6 @@ public class ExtractingAndStoringData {
         reviewsInformation.add(reviewRating);
 
         return reviewsInformation;
-
     }
 
     public static ArrayList<String> retreiveReviewsInformation(JSONArray jsonArray, URL urlGoodreadsReviews, String reviewURL) throws JSONException {
@@ -176,7 +177,7 @@ public class ExtractingAndStoringData {
             JSONArray reviews = jsonArrayGoodreads.getJSONObject(1).getJSONArray("reviews");
             int counter = 0;
             JSONObject jsonObject;
-            while (counter < 5) {
+            while (counter < 1) {
                 try {
                     jsonObject = reviews.getJSONObject(counter);
                 } catch (JSONException e) {
@@ -287,7 +288,7 @@ public class ExtractingAndStoringData {
                 Arrays.asList("programming", "php", "java", "python", "javaScript", "ruby"));
 
         for (String tag : tagList) {
-            for (int i = 1; i < 60; i++) {
+            for (int i = 1; i < 2; i++) {
                 Document eBooks = retreiveDocumentPage("http://it-ebooks.info/search/?q=" + tag + "&type=title&page=" + i);
                 Elements ebooksElements = eBooks.getElementsByAttribute("title");
                 List<String> eBooksList = retreiveLinksFromPage(ebooksElements);
@@ -301,15 +302,12 @@ public class ExtractingAndStoringData {
                 for (int j = 0; j < eBooksList.size(); j += 2) {
                     finalEBooksList.add(eBooksList.get(j));
                 }
-
                 for (String eBookURL : finalEBooksList) {
+                    //String eBookURL = "/book/278/";
 
                     URL ebooksBook = returnPageInJSON(itEBooksSite, eBookURL);
                     String jsonStringEBooks = prepareStringForJSONTransformation(ebooksBook);
                     JSONArray jsonArrayITEbooks = prepareJSONArray(jsonStringEBooks);
-
-                    bookName = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "name");
-                    bookName = prepareName(bookName);
 
                     datePublished = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "datePublished");
                     image = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "image");
@@ -318,6 +316,7 @@ public class ExtractingAndStoringData {
                     inLanguage = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "inLanguage");
 
                     Document bookDocument = retreiveDocumentPage(itEBooksSite + eBookURL);
+
                     try {
                         Elements elementsSub = bookDocument.getElementsByTag("h3");
                         bookSubTitle = elementsSub.text();
@@ -329,7 +328,16 @@ public class ExtractingAndStoringData {
 
                     publisher = publisherElements.text();
                     isbn = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "isbn");
-                    readOnlineLink = "http://it-ebooks.info/read/" + eBookURL.substring(6);
+                    bookName = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "name");
+                    bookName = prepareName(bookName);
+
+                    try {
+                        Elements linkElement = bookDocument.getElementsByAttributeValueMatching("href", "/read/");
+                        readOnlineLink = itEBooksSite + linkElement.attr("href");
+                    } catch (Exception e) {
+                    }
+                    
+                    System.out.println(readOnlineLink);
 
                     if (!Database.getDatabaseObject().bookExists(bookName)) {
                         try {
@@ -350,75 +358,78 @@ public class ExtractingAndStoringData {
 
         String goodreadsSite = "https://www.goodreads.com";
 
-        for (int i = 7; i < 25; i++) {
-            Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page=" + i);
-            Elements goodreadsElements = goodreads.getElementsByClass("bookTitle");
-            ArrayList<String> goodreadsList = retreiveLinksFromPage(goodreadsElements);
+         for (int i = 7; i < 25; i++) {
+        Document goodreads = retreiveDocumentPage("https://www.goodreads.com/shelf/show/programming?page=1"); //+ i);
+        Elements goodreadsElements = goodreads.getElementsByClass("bookTitle");
+        ArrayList<String> goodreadsList = retreiveLinksFromPage(goodreadsElements);
 
-            for (String bookURL : goodreadsList) {
+         for (String bookURL : goodreadsList.subList(0, 1)) {
+        //String bookURL = "/book/show/3264934-head-first-php-mysql?from_search=true";
 
-                URL goodreadsBook = returnPageInJSON(goodreadsSite, bookURL);
+        URL goodreadsBook = returnPageInJSON(goodreadsSite, bookURL);
 
-                String jsonStringGoodreads = prepareStringForJSONTransformation(goodreadsBook);
+        String jsonStringGoodreads = prepareStringForJSONTransformation(goodreadsBook);
 
+        try {
+            JSONArray jsonArrayGoodreads = prepareJSONArray(jsonStringGoodreads);
+
+            reviewArray = new JSONArray();
+            if (jsonArrayGoodreads.getJSONObject(1).has("reviews")) {
                 try {
-                    JSONArray jsonArrayGoodreads = prepareJSONArray(jsonStringGoodreads);
-
-                    reviewArray = new JSONArray();
-                    if (jsonArrayGoodreads.getJSONObject(1).has("reviews")) {
-                        try {
-                            reviewArray = prepareReviewArray(jsonArrayGoodreads);
-                        } catch (JSONException e) {
-                        }
-                    }
-
-
-                    author = getAuthorNameOrNames(jsonArrayGoodreads);
-                    ratingValue = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingValue");
-                    ratingCount = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingCount");
-                    type = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "@type");
-                    numberOfPages = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "numberOfPages");
-                    inLanguage = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "inLanguage");
-                    bookFormatType = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookFormatType");
-                    bookEdition = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookEdition");
-                    isbn = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "isbn");
-                    image = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "image");
-
-                    try {
-                        Document descriptionPage = retreiveDocumentPage(goodreadsSite + bookURL);
-                        Element descriptionElement = descriptionPage.getElementById("description");
-                        description = descriptionElement.text();
-                    } catch (Exception e) {
-                    }
-
-                    try {
-                        description = description.substring(0, description.length() - 6);
-                    } catch (Exception e) {
-                    }
-
-                    try {
-                        awards = jsonArrayGoodreads.getJSONObject(1).getString("awards");
-                    } catch (JSONException e) {
-                        awards = "Without awards";
-                    }
-
-                    bookName = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "name");
-                    bookName = bookName.substring(7, bookName.length() - 1);
-                    bookName = prepareName(bookName);
-
-                    if (Database.getDatabaseObject().bookExists(bookName)) {
-                        System.out.println("Update " + bookName);
-                        ArrayList<String> updateAttributeList = new ArrayList(
-                                Arrays.asList(inLanguage, numberOfPages, ratingValue, ratingCount, type, bookFormatType, bookEdition, awards, description));
-                        Database.getDatabaseObject().updateBook(updateAttributeList, bookName, reviewArray);
-                    } else {
-                        System.out.println("Goodreads " + bookName);
-                        createAndStoreBook();
-                    }
+                    reviewArray = prepareReviewArray(jsonArrayGoodreads);
                 } catch (JSONException e) {
-                    System.out.println("Can't retreive book");
                 }
             }
+
+            author = getAuthorNameOrNames(jsonArrayGoodreads);
+            ratingValue = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingValue");
+            ratingCount = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "ratingCount");
+            type = getSpecificAttributeFromJSON(jsonArrayGoodreads, 0, "@type");
+            numberOfPages = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "numberOfPages");
+            inLanguage = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "inLanguage");
+            bookFormatType = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookFormatType");
+            bookEdition = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "bookEdition");
+            isbn = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "isbn");
+
+            Document goodreadsDocument = retreiveDocumentPage(goodreadsSite + bookURL);
+
+            try {
+                Element descriptionElement = goodreadsDocument.getElementById("description");
+                description = descriptionElement.text();
+            } catch (Exception e) {
+            }
+
+            try {
+                description = description.substring(0, description.length() - 6);
+            } catch (Exception e) {
+            }
+
+            Element imageElement = goodreadsDocument.getElementById("coverImage");
+            image = imageElement.attr("src");
+
+            try {
+                awards = jsonArrayGoodreads.getJSONObject(1).getString("awards");
+            } catch (JSONException e) {
+                awards = "Without awards";
+            }
+
+            bookName = getSpecificAttributeFromJSON(jsonArrayGoodreads, 1, "name");
+            bookName = bookName.substring(7, bookName.length() - 1);
+            bookName = prepareName(bookName);
+
+            if (Database.getDatabaseObject().bookExists(bookName)) {
+                System.out.println("Update " + bookName);
+                ArrayList<String> updateAttributeList = new ArrayList(
+                        Arrays.asList(inLanguage, numberOfPages, ratingValue, ratingCount, type, bookFormatType, bookEdition, awards, description));
+                Database.getDatabaseObject().updateBook(updateAttributeList, bookName, reviewArray);
+            } else {
+                System.out.println("Goodreads " + bookName);
+                createAndStoreBook();
+            }
+        } catch (JSONException e) {
+            System.out.println("Can't retreive book");
+        }
+        }
         }
     }
 
@@ -464,11 +475,15 @@ public class ExtractingAndStoringData {
             prepareName = prepareName.replace("+", " plus");
         }
 
+        if (name.contains("&")) {
+            prepareName = prepareName.replace("&", "and");
+        }
+
         if (name.contains("(")) {
             prepareName = prepareName.replaceAll("\\(.*?\\)", ""); // the same goes for the parentheses, they are just inner mark for the publisher, 
         }                                                          // therefore not relevant to the book name 
 
-        return prepareName;
+        return prepareName.trim();
 
     }
 
