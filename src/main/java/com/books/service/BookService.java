@@ -90,7 +90,7 @@ public class BookService {
         yearsList.addAll(set);
         Collections.sort(yearsList);
 
-        return yearsList.subList(0, yearsList.size() - 5);
+        return yearsList.subList(0, yearsList.size() - 4);
     }
 
     public List<Book> getAllBooksByPublisher(String publisher) {
