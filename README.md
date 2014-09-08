@@ -14,6 +14,7 @@ The following phases are recognized through application workflow:
 ## 2. Domain model
 
 According to schema:Book, the following domain model has been created: 
+![Picture 1 - Domain model](DomainModel.jpg)
 
 ## 3. Solution
 
