@@ -27,6 +27,12 @@ The final product is application which crawles data from sites [Goodreads](https
 When application starts, the fist page, **/index**, shows all books that exist in database. User can choose number of books to be shown in page, and in search box user can search books by title, author or publisher. When user clicks on the book link, page **/book** presents all information about that book. Depending on whether that book has been updated by another site or not, it may show more or less information. For example, if the book has been crawled from the site IT E Books, but didn't get updated from the site Goodreads, user can see basic information about book, like book author, name, date published, link for reading book online (if book contains such link), etc. On the other hand, if the book has been updated by site Goodreads, user can notice book reviews, book rating, rating count, number of pages, ets. 
 
 On **/book** page, user can search for specific book or author, which will be then shown on the same page. From **/index** page, user can navigate to **/search** page which conatins list of all publishers, as well as list of all years available. When user chooses publisher, table shows all books by that publisher, and when he chooses year, table shows all book by that publisher which are published in that year. Also, user can choose option to show only books which contains link for reading book online. 
+
+The following picture presents **/index** page: 
+![Picture 2 - Index page](index-page.png)
+
+Here is **/book** page: 
+![Picture 3 - Book page](book-page.png)
  
 ## 4. Used technologies and instaling instructions
 
