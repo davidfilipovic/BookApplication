@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -50,7 +50,7 @@ public class ExtractingAndStoringData {
 
         Document document = null;
         try {
-            document = Jsoup.connect(requestURL).timeout(15 * 1000).get();
+            document = Jsoup.connect(requestURL).timeout(15 * 1000).get();  // timeout is set to 15000 miliseconds, to avoid SocketTimeoutException
         } catch (IOException ex) {
             Logger.getLogger(ExtractingAndStoringData.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,7 +66,7 @@ public class ExtractingAndStoringData {
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
             while ((inputLine = bufferedReader.readLine()) != null) {
-                jsonString += inputLine;
+                jsonString += inputLine;                                            //this string will be later converted to JSON
             }
             bufferedReader.close();
         } catch (IOException ex) {
@@ -132,12 +132,12 @@ public class ExtractingAndStoringData {
         JSONObject reviewObject;
         JSONObject objectR = new JSONObject(jsonStringReview);
         try {
-            JSONObject reviewObjectMD = objectR.getJSONObject("md:item");
+            JSONObject reviewObjectMD = objectR.getJSONObject("md:item");                   // somethimes there is md:item tag
             reviewObject = reviewObjectMD.getJSONArray("@list").getJSONObject(0).getJSONObject("reviews");
             reviewsInformation = reviewData(reviewObject, reviewURL);
         } catch (JSONException e) {
             try {
-                reviewObject = objectR.getJSONArray("@graph").getJSONObject(0);
+                reviewObject = objectR.getJSONArray("@graph").getJSONObject(0);              // and somethimes there is @graph tag, without md:item tag
                 if (reviewObject.isNull("author")) {
                     reviewObject = objectR.getJSONArray("@graph").getJSONObject(1);
                 }
@@ -165,7 +165,7 @@ public class ExtractingAndStoringData {
             JSONArray reviews = jsonArrayGoodreads.getJSONObject(1).getJSONArray("reviews");
             int counter = 0;
             JSONObject jsonObject;
-            while (counter < 6) {
+            while (counter < 6) {                                   // get 6 reviews from page
                 try {
                     jsonObject = reviews.getJSONObject(counter);
                 } catch (JSONException e) {
@@ -240,7 +240,7 @@ public class ExtractingAndStoringData {
 
         ArrayList<String> listOfBooksURLs = new ArrayList();
         for (Element link : elements) {
-            String linkHref = link.attr("href");
+            String linkHref = link.attr("href");        // Jsoup element with the tag "href" contains link to the book page
             listOfBooksURLs.add(linkHref);
         }
         return listOfBooksURLs;
@@ -275,27 +275,31 @@ public class ExtractingAndStoringData {
         ArrayList<String> tagList = new ArrayList(
                 Arrays.asList("programming", "php", "java", "python", "javaScript", "ruby"));
 
-        for (String tag : tagList) {
-            for (int i = 1; i < 60; i++) {
+        for (String tag : tagList) {                     //for every tag
+            for (int i = 1; i < 60; i++) {               //for every page with book links, maximum of 60
+                
                 Document eBooks = retreiveDocumentPage("http://it-ebooks.info/search/?q=" + tag + "&type=title&page=" + i);
                 Elements ebooksElements = eBooks.getElementsByAttribute("title");
                 List<String> eBooksList = retreiveLinksFromPage(ebooksElements);
+                
                 try {
-                    eBooksList = eBooksList.subList(4, 24);
+                    eBooksList = eBooksList.subList(4, 24);                 // eliminate useless links     
                 } catch (Exception e) {
                     break;
                 }
 
                 ArrayList<String> finalEBooksList = new ArrayList();
-                for (int j = 0; j < eBooksList.size(); j += 2) {
+                for (int j = 0; j < eBooksList.size(); j += 2) {            // also here
                     finalEBooksList.add(eBooksList.get(j));
                 }
-                for (String eBookURL : finalEBooksList) {
+                for (String eBookURL : finalEBooksList) {                   // for every book on that page
 
                     URL ebooksBook = returnPageInJSON(itEBooksSite, eBookURL);
                     String jsonStringEBooks = prepareStringForJSONTransformation(ebooksBook);
-                    JSONArray jsonArrayITEbooks = prepareJSONArray(jsonStringEBooks);
+                    JSONArray jsonArrayITEbooks = prepareJSONArray(jsonStringEBooks);           // this is final JSON, from wich all atributes will be extracted
+                    
 
+                    // extracting of specific attributes
                     datePublished = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "datePublished");
                     image = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "image");
                     author = getSpecificAttributeFromJSON(jsonArrayITEbooks, 0, "author");
@@ -306,7 +310,7 @@ public class ExtractingAndStoringData {
 
                     try {
                         Elements elementsSub = bookDocument.getElementsByTag("h3");
-                        bookSubTitle = elementsSub.text();
+                        bookSubTitle = elementsSub.text();              // this element can't be retreived from JSON 
                     } catch (Exception e) {
                         bookSubTitle = "";
                     }
